@@ -1,0 +1,4 @@
+fastapi
+uvicorn
+cerebras_cloud_sdk
+python-dotenv
