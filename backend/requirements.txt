@@ -1,4 +1,8 @@
 fastapi
 uvicorn
-cerebras_cloud_sdk
 python-dotenv
+cerebras-cloud-sdk
+pdfminer.six
+PyMuPDF
+pydantic
+python-multipart
