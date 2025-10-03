@@ -6,3 +6,4 @@ pdfminer.six
 PyMuPDF
 pydantic
 python-multipart
+python-docx
