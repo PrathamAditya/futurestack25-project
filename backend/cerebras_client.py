@@ -1,14 +1,10 @@
-import os
 from cerebras.cloud.sdk import Cerebras
 from dotenv import load_dotenv
+from config import CEREBRAS_API_KEY
 
-
-
-load_dotenv()
 client = Cerebras(
-  api_key=os.environ.get("CEREBRAS_API_KEY"),
+  api_key=CEREBRAS_API_KEY
 )
-
 
 def review_resume(resume_text, jd_info=None):
     prompt = f"""
