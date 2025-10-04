@@ -7,3 +7,4 @@ PyMuPDF
 pydantic
 python-multipart
 python-docx
+model-context-protocol

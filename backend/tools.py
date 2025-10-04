@@ -14,5 +14,3 @@ from interview_tool import generate_interview_questions, evaluate_interview_answ
 from interview_question_tool import generate_interview_questions_advanced
 
 # NOTE:
-# We don't need to do anything else here — just importing the files
-# will register all decorated @Tool functions with the MCP server.

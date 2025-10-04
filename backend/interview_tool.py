@@ -1,8 +1,7 @@
 # backend/interview_tool.py
-from mcp.server.fastapi import Tool
 from cerebras_client import client
 
-@Tool(name="generate_interview_questions", description="Generate tailored interview questions based on the candidate's resume")
+# @Tool(name="generate_interview_questions", description="Generate tailored interview questions based on the candidate's resume")
 def generate_interview_questions(resume_text: str, num_questions: int = 5):
     prompt = f"""
 You are a skilled technical interviewer. Given the following resume:
@@ -16,7 +15,7 @@ Return a JSON array like:
 [
   {{ "question": "..." }},
   ...
-]
+] 
 """
     response = client.chat.completions.create(
         messages=[{"role": "user", "content": prompt}],
@@ -28,7 +27,7 @@ Return a JSON array like:
     return response.choices[0].message.content
 
 
-@Tool(name="evaluate_interview_answers", description="Evaluate candidate's answers to the generated interview questions")
+# @Tool(name="evaluate_interview_answers", description="Evaluate candidate's answers to the generated interview questions")
 def evaluate_interview_answers(resume_text: str, qa_pairs: list):
     """
     qa_pairs format:

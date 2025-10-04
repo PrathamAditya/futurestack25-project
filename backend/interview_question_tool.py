@@ -2,7 +2,6 @@ import re
 from config import EXA_API_KEY, CEREBRAS_API_KEY
 from exa_py import Exa
 from cerebras.cloud.sdk import Cerebras
-from mcp.server.fastapi import Tool
 
 exa_client = Exa(api_key=EXA_API_KEY)
 llm_client = Cerebras(api_key=CEREBRAS_API_KEY)
@@ -73,7 +72,7 @@ Return a JSON array like:
     return response.choices[0].message.content
 
 
-@Tool(name="generate_interview_questions_advanced", description="Generates high-quality interview questions by combining Exa search with LLaMA refinement.")
+# @Tool(name="generate_interview_questions_advanced", description="Generates high-quality interview questions by combining Exa search with LLaMA refinement.")
 def generate_interview_questions_advanced(resume_text: str, num_questions: int = 5):
     """
     Full pipeline:

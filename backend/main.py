@@ -8,11 +8,11 @@ from resume_parser import parse_resume
 from exa_tool import enrich_job_description
 from job_matcher import compare_resume_to_jd
 from cerebras_client import review_resume
-from mcp.server.fastapi import add_mcp_routes   # 👈 NEW
+from interview_question_tool import generate_interview_questions_advanced
+from interview_tool import evaluate_interview_answers
 
 app = FastAPI()
 
-# ✅ CORS for frontend communication
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],  # or restrict to ["http://localhost:3000"] for security
@@ -21,7 +21,6 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# ✅ Resume Upload Endpoint (as before)
 @app.post("/upload-resume")
 async def upload_resume(file: UploadFile = File(...), job_description: str = Form(...)):
     # Save file temporarily
@@ -49,7 +48,18 @@ async def upload_resume(file: UploadFile = File(...), job_description: str = For
         "ai_feedback": ai_feedback
     }
 
-# ✅ Register MCP tool routes (new)
-# This will automatically expose all @Tool functions (e.g. Exa+LLaMA question generator)
-add_mcp_routes(app)
+@app.post("/interview/generate-advanced")
+async def generate_advanced_questions(request):
+    data = await request.json()
+    resume_text = data.get("resume_text")
+    num_questions = data.get("num_questions", 5)
+    return generate_interview_questions_advanced(resume_text, num_questions)
+
+@app.post("/interview/evaluate")
+async def evaluate_interview(request):
+    data = await request.json()
+    resume_text = data.get("resume_text")
+    qa_pairs = data.get("qa_pairs", [])
+    return evaluate_interview_answers(resume_text, qa_pairs)
+
 
