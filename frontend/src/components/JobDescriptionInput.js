@@ -1,20 +1,14 @@
 import React from "react";
 
-export default function JobDescriptionInput({
-  jobDescription,
-  setJobDescription,
-}) {
+export default function JobDescriptionInput({ value, onChange }) {
   return (
     <div className="mb-3">
-      <label className="form-label">Job Description</label>
+      <label>Job Description</label>
       <textarea
-        className="form-control"
-        rows="5"
-        placeholder="Paste the job description here..."
-        value={jobDescription}
-        onChange={(e) => setJobDescription(e.target.value)}
-        required
-      ></textarea>
+        rows="4"
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
+      />
     </div>
   );
 }

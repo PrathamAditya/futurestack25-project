@@ -1,9 +1,9 @@
-from fastapi import FastAPI, UploadFile, File, Form
+from fastapi import FastAPI, UploadFile, File, Form, Request
 from fastapi.middleware.cors import CORSMiddleware
 import tempfile
 import os
 import config
-import tools   # 👈 NEW - centralizes all MCP tool imports
+# import tools 
 from resume_parser import parse_resume
 from exa_tool import enrich_job_description
 from job_matcher import compare_resume_to_jd
@@ -49,14 +49,14 @@ async def upload_resume(file: UploadFile = File(...), job_description: str = For
     }
 
 @app.post("/interview/generate-advanced")
-async def generate_advanced_questions(request):
+async def generate_advanced_questions(request: Request):
     data = await request.json()
     resume_text = data.get("resume_text")
     num_questions = data.get("num_questions", 5)
     return generate_interview_questions_advanced(resume_text, num_questions)
 
 @app.post("/interview/evaluate")
-async def evaluate_interview(request):
+async def evaluate_interview(request: Request):
     data = await request.json()
     resume_text = data.get("resume_text")
     qa_pairs = data.get("qa_pairs", [])

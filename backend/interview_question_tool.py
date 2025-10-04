@@ -2,6 +2,7 @@ import re
 from config import EXA_API_KEY, CEREBRAS_API_KEY
 from exa_py import Exa
 from cerebras.cloud.sdk import Cerebras
+import json
 
 exa_client = Exa(api_key=EXA_API_KEY)
 llm_client = Cerebras(api_key=CEREBRAS_API_KEY)
@@ -45,32 +46,51 @@ def refine_questions_with_llama(resume_text: str, raw_snippets: list, num_questi
     Use LLaMA to pick the best questions and rewrite them.
     """
     prompt = f"""
-You are an AI interviewer.
+You are an expert technical interviewer from Silicon Valley, USA. Your job is to carefully analyze the candidate's resume and the raw questions/snippets provided, then select and rewrite the most relevant, high-quality interview questions.
 
-Candidate Resume:
+📄 Candidate Resume:
 {resume_text}
 
-Here are raw interview questions and snippets from the web:
+🌐 Raw Questions / Snippets from the Web:
 {raw_snippets}
 
-Pick the {num_questions} most relevant and high-quality questions based on the candidate's skills.
-Rewrite them cleanly and clearly. Include at least one scenario-based and one soft skill question.
+🎯 Your task:
+- Select the **{num_questions} best questions** based on the candidate’s experience, skills, and technologies.
+- Questions must reflect **real-world interview depth**.
+- Ensure a **balanced mix**:
+  - ✅ **2–3 deep technical questions** (covering frameworks, architecture, or reasoning)
+  - ✅ **1 scenario-based question** that tests how the candidate solves practical problems
+  - ✅ **1 soft-skill / communication / collaboration question**
+- **Avoid generic or beginner questions** (e.g., “What is C#?”).
+- Make each question **clear, concise, and precise** — as if asked in a top-tier company technical interview.
+- **Do not** explain your reasoning. **Do not** add extra commentary.
 
-Return a JSON array like:
+📝 Format your output strictly as a **JSON array** like this:
+```json
 [
-  {{ "question": "..." }},
-  ...
+  {{ "question": "First question..." }},
+  {{ "question": "Second question..." }}
 ]
 """
-    response = llm_client.chat.completions.create(
+    llama_response = llm_client.chat.completions.create(
         messages=[{"role": "user", "content": prompt}],
         model="llama-4-scout-17b-16e-instruct",
-        temperature=0.4,
+        temperature=0.2,
         max_tokens=1000
     )
 
-    return response.choices[0].message.content
-
+    content = llama_response.choices[0].message.content
+    json_match = re.search(r"```json\s*(.*?)\s*```", content, re.DOTALL)
+    if json_match:
+        json_str = json_match.group(1).strip()
+    else:
+        json_str = content.strip()
+    try:
+        questions = json.loads(json_str)
+        return questions
+    except json.JSONDecodeError:
+        print("❌ Failed to parse JSON. Raw response was:")
+        return []
 
 # @Tool(name="generate_interview_questions_advanced", description="Generates high-quality interview questions by combining Exa search with LLaMA refinement.")
 def generate_interview_questions_advanced(resume_text: str, num_questions: int = 5):
@@ -83,8 +103,6 @@ def generate_interview_questions_advanced(resume_text: str, num_questions: int =
     skills = extract_top_skills_from_resume(resume_text)
     if not skills:
         return {"error": "No skills found in resume"}
-
-    print(f"🧠 Top extracted skills: {skills}")
 
     all_snippets = []
     for skill in skills:
