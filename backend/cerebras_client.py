@@ -9,17 +9,18 @@ def review_resume(resume_text, jd_info=None):
     prompt = f"""
 You are an experienced **Technical Hiring Assistant** and **AI Career Coach**.
 
-Analyze the following **Resume** in the context of the **Job Description**, and provide a **concise, professional Markdown-formatted** response with ONLY the following section:
+Analyze the candidate's **Resume** in the context of the provided **Job Description**, and provide a **professional, opinionated, Markdown-formatted** response with ONLY the following section:
 
 ## 📄 Resume Analysis
-Summarize the candidate's profile in **4–5 short bullet points**, focusing on:
-- Key **technical skills** and tools mentioned
-- Relevant **experience and achievements**
-- **Certifications** or education that stand out
-- Any **notable strengths** or highlights relevant to the job
+Write **4–5 concise bullet points** that reflect **your evaluation of the resume**, not just extracted information. 
+Focus on:
+- How well the candidate’s **skills and experience align** with the job description.
+- The **strength and clarity** of their technical profile.
+- **Notable strengths or differentiators** that stand out to a hiring manager.
+- Any **gaps or weaknesses** that may affect their fit (in a neutral, professional tone).
 
-Do NOT include recommendations, introductions, explanations, or any other sections.  
-Keep it crisp, factual, and structured.
+Do NOT just list keywords or restate the resume.
+Do NOT include recommendations, introductions, or explanations outside the bullet points.
 
 ---
 **Resume Text:**  
@@ -28,6 +29,7 @@ Keep it crisp, factual, and structured.
 **Job Description Info:**  
 {jd_info}
 """
+
 
     messages = [
         {"role": "system", "content": "You are a structured, concise, and professional AI hiring assistant. Always return clean Markdown. Avoid fluff."},
