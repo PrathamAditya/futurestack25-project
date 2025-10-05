@@ -46,7 +46,7 @@ You are a **senior technical interviewer at a top Silicon Valley company**. Your
 
 📝 Candidate's Answers (strict JSON):
 ```json
-{qa_json}
+{qa_pairs}
 For each answer, evaluate carefully and return:
 question: exactly as given in the input (do NOT modify wording)
 answer: exactly as given by the candidate (do NOT rewrite, infer, or "improve" the answer)
