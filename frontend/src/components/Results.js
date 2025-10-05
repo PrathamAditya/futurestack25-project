@@ -4,7 +4,7 @@ import ReactMarkdown from "react-markdown";
 export default function Results({ result }) {
   if (!result) return null;
 
-  const { resume, jd_info, comparison, ai_feedback } = result;
+  const { ai_feedback } = result;
 
   return (
     <div className="fade-in">
