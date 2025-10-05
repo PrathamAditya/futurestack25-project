@@ -1,31 +1,28 @@
 import React, { useState } from "react";
+import { API_BASE_URL } from "../config";
 
 export default function QuestionList({ resumeText, onSubmitAnswers }) {
   const [questions, setQuestions] = useState([]);
-  const [answers, setAnswers] = useState({});
+  const [answers, setAnswers] = useState([]);
   const [loading, setLoading] = useState(false);
 
   const fetchQuestions = async () => {
-    if (!resumeText) {
-      alert("Please analyze resume first.");
-      return;
-    }
     setLoading(true);
     try {
       const response = await fetch(
-        "http://127.0.0.1:8000/interview/generate-advanced",
+        `${API_BASE_URL}/interview/generate-advanced`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ resume_text: resumeText, num_questions: 5 }),
+          body: JSON.stringify({
+            resume_text: resumeText,
+            num_questions: 5,
+          }),
         }
       );
-
       const data = await response.json();
-
-      // If backend returns string JSON, parse it
-      const parsed = typeof data === "string" ? JSON.parse(data) : data;
-      setQuestions(parsed);
+      setQuestions(data);
+      setAnswers(Array(data.length).fill(""));
     } catch (err) {
       console.error(err);
       alert("Failed to fetch questions");
@@ -35,7 +32,9 @@ export default function QuestionList({ resumeText, onSubmitAnswers }) {
   };
 
   const handleAnswerChange = (index, value) => {
-    setAnswers({ ...answers, [index]: value });
+    const newAnswers = [...answers];
+    newAnswers[index] = value;
+    setAnswers(newAnswers);
   };
 
   const handleSubmit = () => {
@@ -43,42 +42,55 @@ export default function QuestionList({ resumeText, onSubmitAnswers }) {
       question: q.question || q,
       answer: answers[i] || "",
     }));
-
     onSubmitAnswers(qaPairs);
   };
 
   return (
-    <div className="card mt-4">
-      <h2>Answer Questions</h2>
+    <div className="fade-in">
+      <h3>Step 2: Answer Interview Questions</h3>
 
-      {!questions.length ? (
+      {/* Generate Button */}
+      {questions.length === 0 && (
         <button
-          className="btn btn-primary"
+          className="btn btn-primary w-100 mb-4"
           onClick={fetchQuestions}
           disabled={loading}
         >
-          {loading ? "Generating..." : "Generate Interview Questions"}
+          {loading ? (
+            <span>
+              <span className="spinner-border spinner-border-sm me-2"></span>
+              Generating Questions...
+            </span>
+          ) : (
+            "Generate Questions"
+          )}
         </button>
-      ) : (
-        <div>
-          {questions.map((q, i) => (
-            <div key={i} className="mb-3">
-              <label>
-                <strong>Q{i + 1}:</strong> {q.question || q}
-              </label>
-              <textarea
-                rows="3"
-                className="form-control mt-2"
-                value={answers[i] || ""}
-                onChange={(e) => handleAnswerChange(i, e.target.value)}
-              />
-            </div>
-          ))}
+      )}
 
-          <button className="btn btn-primary" onClick={handleSubmit}>
-            Submit Answers for Evaluation
-          </button>
+      {/* Question List */}
+      {questions.map((q, idx) => (
+        <div key={idx} className="question-card fade-in">
+          <h5>Q{idx + 1}:</h5>
+          <p>{q.question || q}</p>
+          <textarea
+            rows="3"
+            className="form-control mt-2"
+            placeholder="Type your answer here..."
+            value={answers[idx] || ""}
+            onChange={(e) => handleAnswerChange(idx, e.target.value)}
+          ></textarea>
         </div>
+      ))}
+
+      {/* Submit Button */}
+      {questions.length > 0 && (
+        <button
+          className="btn btn-primary w-100 mt-3"
+          onClick={handleSubmit}
+          disabled={answers.some((a) => a.trim() === "")}
+        >
+          Submit Answers for Evaluation
+        </button>
       )}
     </div>
   );

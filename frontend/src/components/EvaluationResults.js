@@ -1,33 +1,35 @@
 import React from "react";
 
 export default function EvaluationResults({ results }) {
-  if (!results) return null;
+  if (!results || !results.results) return null;
 
   return (
-    <div className="card mt-4">
-      <h2>Step 3: Evaluation Results</h2>
+    <div className="fade-in">
+      <h3>Step 3: Evaluation Results</h3>
 
       {results.results.map((item, idx) => (
-        <div key={idx} className="mb-3">
-          <strong>
-            Q{idx + 1}: {item.question}
-          </strong>
+        <div key={idx} className="question-card">
+          <h5>Q{idx + 1}</h5>
           <p>
-            <em>Your Answer:</em> {item.answer}
+            <strong>Question:</strong> {item.question}
           </p>
           <p>
-            <strong>Score:</strong> {item.score} / 5
+            <strong>Your Answer:</strong> {item.answer}
           </p>
-          <p>
-            <strong>Feedback:</strong> {item.feedback}
-          </p>
-          <hr />
+          <p className="result-score">Score: {item.score} / 5</p>
+          <div className="feedback-box">{item.feedback}</div>
         </div>
       ))}
 
-      <div className="mt-3">
-        <h4>Overall Score: {results.overall_score} / 5</h4>
-        <p>{results.summary_feedback}</p>
+      <div className="mt-4 p-3 rounded" style={{ backgroundColor: "#222" }}>
+        <h4>
+          Overall Score:{" "}
+          <span className="result-score">
+            {results.overall_score?.toFixed(1)}
+          </span>{" "}
+          / 5
+        </h4>
+        <p className="mt-2">{results.summary_feedback}</p>
       </div>
     </div>
   );

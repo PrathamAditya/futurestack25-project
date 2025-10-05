@@ -3,7 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 import tempfile
 import os
 import config
-# import tools 
+
 from resume_parser import parse_resume
 from exa_tool import enrich_job_description
 from job_matcher import compare_resume_to_jd
@@ -15,7 +15,7 @@ app = FastAPI()
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # or restrict to ["http://localhost:3000"] for security
+    allow_origins=["*"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -23,22 +23,14 @@ app.add_middleware(
 
 @app.post("/upload-resume")
 async def upload_resume(file: UploadFile = File(...), job_description: str = Form(...)):
-    # Save file temporarily
     with tempfile.NamedTemporaryFile(delete=False) as tmp:
         tmp.write(await file.read())
         tmp_path = tmp.name
 
-    # Extract structured resume data
     resume_data = parse_resume(tmp_path, file.filename)
     os.remove(tmp_path)
-
-    # Enrich JD
     enriched_jd_info = enrich_job_description(job_description)
-
-    # Compare Resume vs JD
     comparison_result = compare_resume_to_jd(resume_data, enriched_jd_info)
-
-    # AI feedback
     ai_feedback = review_resume(resume_data["raw_text"], enriched_jd_info)
 
     return {
@@ -60,6 +52,8 @@ async def evaluate_interview(request: Request):
     data = await request.json()
     resume_text = data.get("resume_text")
     qa_pairs = data.get("qa_pairs", [])
-    return evaluate_interview_answers(resume_text, qa_pairs)
 
-
+    evaluation = evaluate_interview_answers(resume_text, qa_pairs)
+    if isinstance(evaluation, list):
+        return {"results": evaluation, "overall_score": 0, "summary_feedback": ""}
+    return evaluation

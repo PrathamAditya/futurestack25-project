@@ -1,4 +1,6 @@
 import React, { useState } from "react";
+import "./UploadForm.css";
+import { API_BASE_URL } from "../config";
 
 export default function UploadForm({ onAnalysisComplete }) {
   const [file, setFile] = useState(null);
@@ -21,7 +23,7 @@ export default function UploadForm({ onAnalysisComplete }) {
     formData.append("job_description", jobDescription);
 
     try {
-      const res = await fetch("http://127.0.0.1:8000/upload-resume", {
+      const res = await fetch(`${API_BASE_URL}/upload-resume`, {
         method: "POST",
         body: formData,
       });
@@ -36,25 +38,46 @@ export default function UploadForm({ onAnalysisComplete }) {
   };
 
   return (
-    <div className="card">
-      <h2>Upload Resume</h2>
+    <div className="step-card upload-form fade-in">
+      <h3 className="mb-4">Upload Resume & Write Job Description</h3>
+
       <form onSubmit={handleSubmit}>
+        {/* Resume Upload */}
         <div className="mb-3">
-          <label>Resume (PDF / DOCX)</label>
+          <label className="form-label">Resume (PDF / DOCX)</label>
           <input
             type="file"
             accept=".pdf,.doc,.docx"
+            className="form-control"
             onChange={handleFileChange}
           />
         </div>
 
+        {/* Job Description */}
         <div className="mb-3">
-          <label>Job Description</label>
-          <textarea rows="4" value={jobDescription} onChange={handleJDChange} />
+          <label className="form-label">📝 Job Description</label>
+          <textarea
+            rows="4"
+            value={jobDescription}
+            onChange={handleJDChange}
+            className="form-control job-description-textarea"
+            placeholder="Paste the job description here..."
+          />
         </div>
 
-        <button className="btn btn-primary" type="submit" disabled={loading}>
-          {loading ? "Analyzing..." : "Upload & Analyze"}
+        <button
+          className="btn btn-primary w-100"
+          type="submit"
+          disabled={loading}
+        >
+          {loading ? (
+            <>
+              <span className="spinner-border spinner-border-sm me-2"></span>
+              Analyzing...
+            </>
+          ) : (
+            "Upload & Analyze"
+          )}
         </button>
       </form>
     </div>

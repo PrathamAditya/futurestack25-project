@@ -27,6 +27,11 @@ package-lock.json
 .pnp.js
 .cache/
 coverage/
+# ==========================
+# React Environment files
+# ==========================
+frontend/.env
+frontend/.env.production
 
 # ==========================
 # IDE / Editor files

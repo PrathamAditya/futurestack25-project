@@ -1,0 +1,29 @@
+.upload-form .form-label {
+    font-weight: 500;
+}
+
+.upload-form .job-description-textarea {
+    resize: none;
+    overflow-y: auto;
+    min-height: 100px;
+    max-height: 150px;
+}
+
+.upload-form input[type="file"] {
+    background-color: var(--grey);
+    color: var(--offwhite);
+}
+
+.upload-form input[type="file"]::-webkit-file-upload-button {
+    background-color: var(--accent);
+    color: var(--grey);
+    border: none;
+    padding: 0.4rem 0.8rem;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: 600;
+}
+
+.upload-form input[type="file"]::-webkit-file-upload-button:hover {
+    background-color: var(--accent-hover);
+}

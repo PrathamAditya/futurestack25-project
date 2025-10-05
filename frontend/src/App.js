@@ -5,30 +5,25 @@ import UploadForm from "./components/UploadForm";
 import Results from "./components/Results";
 import QuestionList from "./components/QuestionList";
 import EvaluationResults from "./components/EvaluationResults";
+import { API_BASE_URL } from "./config";
 
 function App() {
   const [analysisResult, setAnalysisResult] = useState(null);
   const [qaPairs, setQaPairs] = useState(null);
   const [evaluationResults, setEvaluationResults] = useState(null);
 
-  // 🧠 When qaPairs changes, trigger evaluation call
   useEffect(() => {
     const evaluateAnswers = async () => {
       if (!qaPairs || !analysisResult) return;
-
       try {
-        const response = await fetch(
-          "http://127.0.0.1:8000/interview/evaluate",
-          {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-              resume_text: analysisResult?.resume?.raw_text,
-              qa_pairs: qaPairs,
-            }),
-          }
-        );
-
+        const response = await fetch(`${API_BASE_URL}/interview/evaluate`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            resume_text: analysisResult?.resume?.raw_text,
+            qa_pairs: qaPairs,
+          }),
+        });
         const data = await response.json();
         setEvaluationResults(data);
       } catch (err) {
@@ -36,23 +31,64 @@ function App() {
         alert("Failed to evaluate answers");
       }
     };
-
     evaluateAnswers();
   }, [qaPairs, analysisResult]);
 
   return (
-    <div>
-      <div className="navbar">⚡ AI Interview Assistant</div>
-      <div className="container">
-        <UploadForm onAnalysisComplete={setAnalysisResult} />
-        <Results result={analysisResult} />
+    <div className="app-bg min-vh-100">
+      <nav className="navbar navbar-dark bg-dark shadow justify-content-center">
+        <div className="container d-flex justify-content-center">
+          <span className="navbar-brand app-title mb-0 h1 text-center">
+            AI Resume & Interview Evaluator
+          </span>
+        </div>
+      </nav>
+      <div className="container py-5">
+        {/* STEP 1 */}
+        <div className="step-card fade-in">
+          <UploadForm onAnalysisComplete={setAnalysisResult} />
+        </div>
+
+        {/* STEP 2 */}
         {analysisResult && (
-          <QuestionList
-            resumeText={analysisResult?.resume?.raw_text}
-            onSubmitAnswers={setQaPairs}
-          />
+          <div className="step-card fade-in">
+            <Results result={analysisResult} />
+          </div>
         )}
-        {evaluationResults && <EvaluationResults results={evaluationResults} />}
+
+        {/* STEP 3 */}
+        {analysisResult && (
+          <div className="step-card fade-in">
+            <QuestionList
+              resumeText={analysisResult?.resume?.raw_text}
+              onSubmitAnswers={setQaPairs}
+            />
+          </div>
+        )}
+
+        {/* STEP 4 */}
+        {evaluationResults && (
+          <div className="step-card fade-in">
+            <EvaluationResults results={evaluationResults} />
+          </div>
+        )}
+
+        {/* Footer 
+        <footer className="footer text-center py-3">
+          <div className="container">
+            <p className="mb-0">
+              Built for <strong>FutureStack25 Hackathon</strong> ·
+              <a
+                href="https://github.com/PrathamAditya/futurestack25-project"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="footer-link ms-1"
+              >
+                View on GitHub
+              </a>
+            </p>
+          </div>
+        </footer> */}
       </div>
     </div>
   );
