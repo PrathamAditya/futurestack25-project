@@ -152,7 +152,5 @@ futurestack25-project/
 ## 🚀 Deployment
 
 - Ensure `.env.production` is set for both frontend and backend.
-- Build Docker images and push to container registry (e.g., Docker Hub, Azure Container Registry).
-- Deploy using your cloud platform of choice (e.g., Render, Azure App Service, Fly.io).
 
 ---
