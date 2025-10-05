@@ -38,7 +38,7 @@ def evaluate_interview_answers(resume_text: str, qa_pairs: list):
       ...
     ]
     """
-    prompt = """
+    prompt = f"""
 You are a **senior technical interviewer at a top Silicon Valley company**. Your task is to fairly and rigorously evaluate a candidate's interview answers based on their resume and the provided question-answer pairs.
 
 📄 Candidate Resume:
