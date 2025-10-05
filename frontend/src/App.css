@@ -9,10 +9,20 @@
   font-weight: 800;
   text-align: center;
   letter-spacing: 0.5px;
-  color: var(--offwhite);
+  color: var(--light-grey);
   text-shadow:
-    0 0 8px rgba(255, 255, 255, 0.4),
+    0 0 8px rgba(0, 200, 150, 0.4),
     0 0 15px rgba(0, 200, 150, 0.6);
+}
+
+.navbar .app-title {
+  color: var(--light-grey) !important;
+}
+
+@media (max-width: 576px) {
+  .app-title {
+    font-size: 2rem;
+  }
 }
 
 @media (max-width: 576px) {

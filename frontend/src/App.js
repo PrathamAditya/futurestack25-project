@@ -36,11 +36,11 @@ function App() {
 
   return (
     <div className="app-bg min-vh-100">
-      <nav className="navbar navbar-dark bg-dark shadow justify-content-center">
+      <nav className="navbar justify-content-center">
         <div className="container d-flex justify-content-center">
-          <span className="navbar-brand app-title mb-0 h1 text-center">
+          <h1 className="app-title mb-0 text-center">
             AI Resume & Interview Evaluator
-          </span>
+          </h1>
         </div>
       </nav>
       <div className="container py-5">

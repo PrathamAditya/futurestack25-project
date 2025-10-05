@@ -52,16 +52,8 @@ body {
   background: transparent;
   box-shadow: none;
   border: none;
-  padding: 1.5rem 0;
   display: flex;
   justify-content: center;
-}
-
-.navbar-brand {
-  font-weight: 700;
-  font-size: 2.75rem;
-  color: var(--offwhite);
-  text-align: center;
 }
 
 /* STEP CARDS */
@@ -83,9 +75,13 @@ h1,
 h2,
 h3,
 h4 {
-  font-weight: 600;
+  font-weight: 700;
   margin-top: 0;
   color: var(--offwhite);
+}
+
+.app-title {
+  color: var(--grey) !important;
 }
 
 h2,
