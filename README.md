@@ -44,7 +44,7 @@ The system parses resumes, enriches job descriptions using Exa, evaluates resume
 ### 1. Clone Repository
 
 ```bash
-git clone https://github.com/<your-username>/futurestack25-project.git
+git clone https://github.com/PrathamAditya/futurestack25-project
 cd futurestack25-project
 ```
 
