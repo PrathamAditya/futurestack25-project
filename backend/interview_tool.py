@@ -38,15 +38,15 @@ def evaluate_interview_answers(resume_text: str, qa_pairs: list):
       ...
     ]
     """
-    prompt = f"""
-You are a **senior technical interviewer at a top Silicon Valley company**. Your task is to fairly and rigorously evaluate a candidate's interview answers based on their resume and the provided question-answer pairs.
+    prompt = """
+You are a *senior technical interviewer at a top Silicon Valley company*. Your task is to fairly and rigorously evaluate a candidate's interview answers based on their resume and the provided question-answer pairs.
 
 📄 Candidate Resume:
-{resume_text}
+{}
 
 📝 Candidate's Answers (strict JSON):
-```json
-{qa_pairs}
+json
+{}
 For each answer, evaluate carefully and return:
 question: exactly as given in the input (do NOT modify wording)
 answer: exactly as given by the candidate (do NOT rewrite, infer, or "improve" the answer)
@@ -60,7 +60,8 @@ feedback: 2–3 sentences of specific, constructive feedback on how the answer c
 After evaluating all answers, calculate:
 overall_score: the average score across all answers, rounded to 1 decimal place.
 summary_feedback: a 2–3 sentence overall performance summary. Comment on the candidate’s technical ability, clarity, and communication style. Mention strengths and key improvement areas.
-Output formatting rules:
+Output formatting rules:""".format(resume_text, qa_pairs)
+    prompt += """
 Return ONLY a valid JSON object in the following structure:
 {
   "results": [
@@ -78,6 +79,7 @@ Do NOT include any text before or after the JSON object.
 If the answer is "I don't know" or similar, score it as 1 and give clear feedback explaining why.
 Do NOT rewrite or generate new answers under any circumstances.
 """
+  
     llama_response = client.chat.completions.create(
         messages=[{"role": "user", "content": prompt}],
         model="llama-4-scout-17b-16e-instruct",
@@ -86,7 +88,7 @@ Do NOT rewrite or generate new answers under any circumstances.
     )
     content = llama_response.choices[0].message.content
     print(content)
-    json_match = re.search(r"```json\s*(.*?)\s*```", content, re.DOTALL)
+    json_match = re.search(r"json\s*(.?)\s```", content, re.DOTALL)
     if json_match:
         json_str = json_match.group(1).strip()
     else:
