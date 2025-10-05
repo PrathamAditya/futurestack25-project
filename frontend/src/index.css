@@ -22,9 +22,9 @@ body {
   margin: 0;
   padding: 0;
   color: var(--offwhite);
-  background: linear-gradient(135deg, #00c896, #ffffff);
+  background: linear-gradient(45deg, #74cab4, #ffffff, #e7e786);
   background-size: 400% 400%;
-  animation: gradientShift 3s ease infinite;
+  animation: gradientShift 6s ease infinite;
 }
 
 @keyframes gradientShift {
