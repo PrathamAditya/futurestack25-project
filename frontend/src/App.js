@@ -44,19 +44,14 @@ function App() {
         </div>
       </nav>
       <div className="container py-5">
-        {/* STEP 1 */}
         <div className="step-card fade-in">
           <UploadForm onAnalysisComplete={setAnalysisResult} />
         </div>
-
-        {/* STEP 2 */}
         {analysisResult && (
           <div className="step-card fade-in">
             <Results result={analysisResult} />
           </div>
         )}
-
-        {/* STEP 3 */}
         {analysisResult && (
           <div className="step-card fade-in">
             <QuestionList
@@ -65,30 +60,11 @@ function App() {
             />
           </div>
         )}
-
-        {/* STEP 4 */}
         {evaluationResults && (
           <div className="step-card fade-in">
             <EvaluationResults results={evaluationResults} />
           </div>
         )}
-
-        {/* Footer 
-        <footer className="footer text-center py-3">
-          <div className="container">
-            <p className="mb-0">
-              Built for <strong>FutureStack25 Hackathon</strong> ·
-              <a
-                href="https://github.com/PrathamAditya/futurestack25-project"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="footer-link ms-1"
-              >
-                View on GitHub
-              </a>
-            </p>
-          </div>
-        </footer> */}
       </div>
     </div>
   );

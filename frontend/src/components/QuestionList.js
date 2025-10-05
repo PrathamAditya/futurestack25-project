@@ -47,7 +47,7 @@ export default function QuestionList({ resumeText, onSubmitAnswers }) {
 
   return (
     <div className="fade-in">
-      <h3>Step 2: Answer Interview Questions</h3>
+      <h3>Answer Interview Questions</h3>
 
       {/* Generate Button */}
       {questions.length === 0 && (

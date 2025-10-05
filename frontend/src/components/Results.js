@@ -8,7 +8,7 @@ export default function Results({ result }) {
 
   return (
     <div className="fade-in">
-      <h3>Step 1: Resume Analysis</h3>
+      <h3>Resume Analysis</h3>
 
       <div className="mb-3">
         <h5>Skills Extracted</h5>

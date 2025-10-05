@@ -9,29 +9,17 @@ def review_resume(resume_text, jd_info=None):
     prompt = f"""
 You are an experienced **Technical Hiring Assistant** and **AI Career Coach**.
 
-Analyze the following **Resume** and **Job Description** carefully and provide a **professional, concise, Markdown-formatted** report with the following sections:
+Analyze the following **Resume** in the context of the **Job Description**, and provide a **concise, professional Markdown-formatted** response with ONLY the following section:
 
 ## 📄 Resume Analysis
-- Highlight the **most important technical skills**, tools, frameworks, and domains.
-- Summarize **relevant experience** (years, industries, notable achievements).
-- Note **education**, certifications, and any standout strengths.
+Summarize the candidate's profile in **4–5 short bullet points**, focusing on:
+- Key **technical skills** and tools mentioned
+- Relevant **experience and achievements**
+- **Certifications** or education that stand out
+- Any **notable strengths** or highlights relevant to the job
 
-## 📝 Job Description Analysis
-- Extract and summarize **key technical requirements**, soft skills, and experience levels.
-- Identify any **must-have qualifications** mentioned explicitly.
-
-## 📊 Comparison Snapshot
-Provide a **crisp 4-point summary**:
-- **Skill Match:** X % — (brief explanation)
-- **Experience Match:** X % — (brief explanation)
-- **Missing / Underrepresented Skills:** list 3–5 key gaps
-- **Overall Alignment:** 2–3 sentences on how well the resume matches the JD
-
-## 🚀 Recommendations
-Provide **specific, actionable suggestions** (3–5 bullet points) to improve the resume or interview readiness:
-- Focus on **missing skills**
-- **Resume phrasing** improvements if relevant
-- **Preparation areas** for likely questions based on gaps
+Do NOT include recommendations, introductions, explanations, or any other sections.  
+Keep it crisp, factual, and structured.
 
 ---
 **Resume Text:**  
@@ -49,7 +37,7 @@ Provide **specific, actionable suggestions** (3–5 bullet points) to improve th
     response = client.chat.completions.create(
         messages=messages,
         model="llama-4-scout-17b-16e-instruct",
-        temperature=0.3,
+        temperature=0.1,
         max_tokens=1200
     )
 

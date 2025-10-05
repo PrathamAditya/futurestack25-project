@@ -5,7 +5,7 @@ export default function EvaluationResults({ results }) {
 
   return (
     <div className="fade-in">
-      <h3>Step 3: Evaluation Results</h3>
+      <h3>Evaluation Results</h3>
 
       {results.results.map((item, idx) => (
         <div key={idx} className="question-card">
