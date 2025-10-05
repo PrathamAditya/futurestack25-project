@@ -23,6 +23,7 @@ export default function UploadForm({ onAnalysisComplete }) {
     formData.append("job_description", jobDescription);
 
     try {
+      // const res = await fetch(//"http://127.0.0.1:8000/upload-resume",
       const res = await fetch(`${API_BASE_URL}/upload-resume`, {
         method: "POST",
         body: formData,
@@ -55,7 +56,7 @@ export default function UploadForm({ onAnalysisComplete }) {
 
         {/* Job Description */}
         <div className="mb-3">
-          <label className="form-label">📝 Job Description</label>
+          <label className="form-label">Job Description</label>
           <textarea
             rows="4"
             value={jobDescription}

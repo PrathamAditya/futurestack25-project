@@ -2,63 +2,64 @@ import os
 from exa_py import Exa
 from dotenv import load_dotenv
 from config import EXA_API_KEY
+import re
+import logging
 
+logger = logging.getLogger(__name__)
 exa_client = Exa(api_key=EXA_API_KEY)
 
-def enrich_job_description(job_description: str, num_results=5):
+def enrich_job_description(job_description: str, num_results=20):
     """
     Enrich a job description using Exa's neural search to extract trending skills and technologies.
+    Returns structured info for matching: skills_required and experience_required.
     """
     if not EXA_API_KEY:
-        print("⚠️ EXA_API_KEY not set. Returning fallback.")
+        logger.warning("⚠️ EXA_API_KEY not found — skipping enrichment and returning minimal structure.")
         return {
-            "skills_required": ["Communication", "Problem Solving"],
-            "experience_required": 1
+            "skills_required": [],
+            "experience_required": None
         }
 
-    print(f"🔍 Enriching JD via Exa for: {job_description}")
+    logger.info(f"Enriching JD via Exa for: {job_description}")
 
-    # Search web with Exa
     try:
         results = exa_client.search_and_contents(
-            f"Top frameworks, libraries, and skills required for this job: {job_description}",
+            f"Top frameworks, libraries, technologies, and skills for the role: {job_description}",
             type="auto",
             num_results=num_results,
             text={"max_characters": 800}
         ).results
 
-        snippets = []
-        for r in results:
-            if r.text and len(r.text) > 100:
-                snippets.append(r.text)
-
-        combined_text = " ".join(snippets)
-        if not combined_text:
-            print("⚠️ No Exa results, using fallback.")
+        snippets = [r.text for r in results if r.text and len(r.text) > 80]
+        if not snippets:
+            logger.warning("No relevant snippets found from Exa.")
             return {
-                "skills_required": ["Communication", "Problem Solving"],
-                "experience_required": 1
+                "skills_required": [],
+                "experience_required": None
             }
 
-        # Very basic skill extraction: capitalized keywords
-        extracted_skills = set()
-        for word in combined_text.split():
-            word = word.strip(",.()")
-            if word.isalpha() and word[0].isupper() and len(word) > 2:
-                extracted_skills.add(word)
+        combined_text = " ".join(snippets)
+        skill_pattern = re.compile(r"\b[A-Z][a-zA-Z0-9\+\#\.\-]{2,}\b")
+        raw_skills = skill_pattern.findall(combined_text)
 
-        skills_list = list(extracted_skills)[:20]
+        # Normalize and filter duplicates
+        clean_skills = list({skill.strip(",.()") for skill in raw_skills})
 
-        print(f"✅ Extracted skills from Exa: {skills_list}")
+        # Heuristic: prioritize top 20 unique skills
+        top_skills = clean_skills[:20]
+
+        logger.info(f"Extracted skills: {top_skills}")
+        exp_match = re.search(r"(\d+)\s*\+?\s*years?", combined_text, re.IGNORECASE)
+        experience_required = int(exp_match.group(1)) if exp_match else None
 
         return {
-            "skills_required": skills_list if skills_list else ["Communication", "Problem Solving"],
-            "experience_required": 1
+            "skills_required": top_skills,
+            "experience_required": experience_required
         }
 
     except Exception as e:
-        print(f"❌ Exa enrichment error: {e}")
+        logger.error(f"Error during Exa enrichment: {e}")
         return {
-            "skills_required": ["Communication", "Problem Solving"],
-            "experience_required": 1
+            "skills_required": [],
+            "experience_required": None
         }
